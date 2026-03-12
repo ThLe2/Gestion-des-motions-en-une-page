@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parcours de Formation - Intelligence Émotionnelle</title>
+    <title>Parcours de Formation - Intelligence Émotionnelle | TMK Performances</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -18,12 +18,21 @@
             padding: 20px;
         }
         .header {
-            background-color: #4a6fa5;
-            color: white;
-            padding: 20px;
-            text-align: center;
-            border-radius: 8px 8px 0 0;
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
             margin-bottom: 20px;
+        }
+        .logo {
+            height: 60px;
+        }
+        .welcome-title {
+            text-align: center;
+            color: #4a6fa5;
+            margin: 30px 0;
         }
         .module {
             background-color: white;
@@ -41,6 +50,8 @@
             border-bottom: 2px solid #eee;
             padding-bottom: 10px;
             margin-top: 0;
+            display: flex;
+            align-items: center;
         }
         .module-number {
             background-color: #4a6fa5;
@@ -48,10 +59,10 @@
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            display: inline-flex;
+            display: flex;
             align-items: center;
             justify-content: center;
-            margin-right: 10px;
+            margin-right: 15px;
             font-weight: bold;
         }
         .content {
@@ -84,6 +95,7 @@
             justify-content: space-between;
             margin-bottom: 20px;
             position: relative;
+            margin-top: 30px;
         }
         .progress::before {
             content: '';
@@ -131,21 +143,85 @@
             color: #666;
             margin-bottom: 20px;
         }
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid #eee;
+        }
+        .sommaire {
+            background-color: white;
+            border-radius: 8px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        .sommaire-title {
+            color: #4a6fa5;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .sommaire-list {
+            list-style: none;
+            padding: 0;
+        }
+        .sommaire-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .sommaire-list li:hover {
+            color: #4a6fa5;
+        }
+        .sommaire-list li:last-child {
+            border-bottom: none;
+        }
+        .start-btn {
+            display: block;
+            margin: 30px auto;
+            background-color: #28a745;
+        }
+        .start-btn:hover {
+            background-color: #218838;
+        }
+        .welcome-text {
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Parcours de Formation - Intelligence Émotionnelle</h1>
-        </div>
+    <div class="header">
+        <img src="https://www.tmk-performances.com/public/assets/gifs/logo.png" alt="TMK Performances Logo" class="logo">
+    </div>
 
-        <div class="progress" id="progress">
-            <!-- Les étapes seront ajoutées par JavaScript -->
+    <div class="container">
+        <!-- Page de bienvenue -->
+        <div class="module active" id="welcome">
+            <h1 class="welcome-title">Bienvenue dans votre parcours de formation<br>Intelligence Émotionnelle</h1>
+
+            <div class="welcome-text">
+                <p>Ce parcours vous guidera à travers différents modules pour développer votre intelligence émotionnelle.</p>
+                <p>Vous découvrirez comment mieux comprendre et gérer vos émotions, ainsi que celles des autres, pour améliorer vos relations professionnelles et personnelles.</p>
+                <p>Chaque module contient des vidéos, des exercices pratiques et des réflexions pour vous accompagner dans cette démarche.</p>
+            </div>
+
+            <div class="sommaire">
+                <h2 class="sommaire-title">Sommaire du parcours</h2>
+                <ul class="sommaire-list" id="sommaireList">
+                    <!-- Les éléments seront ajoutés par JavaScript -->
+                </ul>
+            </div>
+
+            <button class="start-btn" id="startBtn">Commencer le parcours</button>
         </div>
 
         <!-- Module 1 -->
-        <div class="module active" id="module1">
-            <h2><span class="module-number">1</span>Le Digital Accompagné (DA)</h2>
+        <div class="module" id="module1">
+            <h2 class="module-title"><span class="module-number">1</span>Le Digital Accompagné (DA)</h2>
             <div class="content">
                 <iframe src="https://share.synthesia.io/embeds/videos/53501945-6bc3-4fc2-9703-5207b059cebb"
                         allowfullscreen="true"
@@ -156,7 +232,7 @@
 
         <!-- Module 5 -->
         <div class="module" id="module5">
-            <h2><span class="module-number">5</span>Quelle est votre météo intérieure mais plus précisément ?</h2>
+            <h2 class="module-title"><span class="module-number">5</span>Quelle est votre météo intérieure mais plus précisément ?</h2>
             <div class="content">
                 <iframe src="https://meteo-interieure.vercel.app/"
                         width="100%"
@@ -167,7 +243,7 @@
 
         <!-- Module 6 -->
         <div class="module" id="module6">
-            <h2><span class="module-number">6</span>Roue des émotions</h2>
+            <h2 class="module-title"><span class="module-number">6</span>Roue des émotions</h2>
             <div class="content">
                 <div class="question">
                     <p>À l'aide de la roue des émotions, identifiez une émotion que vous avez récemment ressentie, sans expliquer les situations, et décrivez une réaction adaptée que vous avez mise en œuvre dans ce contexte et qu'en avez vous tiré?</p>
@@ -178,7 +254,7 @@
 
         <!-- Module 14 -->
         <div class="module" id="module14">
-            <h2><span class="module-number">14</span>Test de Quotient Émotionnel</h2>
+            <h2 class="module-title"><span class="module-number">14</span>Test de Quotient Émotionnel</h2>
             <div class="content">
                 <iframe src="https://intelligence-emotionnelle.vercel.app/"
                         width="100%"
@@ -189,7 +265,7 @@
 
         <!-- Module 18 -->
         <div class="module" id="module18">
-            <h2><span class="module-number">18</span>Les émotions - Alliées ou ennemies</h2>
+            <h2 class="module-title"><span class="module-number">18</span>Les émotions - Alliées ou ennemies</h2>
             <div class="content">
                 <iframe src="https://share.synthesia.io/embeds/videos/9eb23be6-d837-4398-8e90-4b4594974975"
                         allowfullscreen="true"
@@ -200,7 +276,7 @@
 
         <!-- Module 39 -->
         <div class="module" id="module39">
-            <h2><span class="module-number">39</span>Situation 2</h2>
+            <h2 class="module-title"><span class="module-number">39</span>Situation 2</h2>
             <div class="content">
                 <iframe src="https://360learning-v2.vercel.app/"
                         width="100%"
@@ -211,14 +287,19 @@
 
         <!-- Module 44 -->
         <div class="module" id="module44">
-            <h2><span class="module-number">44</span>Fin - remerciements</h2>
+            <h2 class="module-title"><span class="module-number">44</span>Fin - remerciements</h2>
             <div class="content">
                 <div style="text-align: center; padding: 50px;">
                     <h3>Félicitations ! Vous avez terminé ce parcours de formation.</h3>
                     <p>Merci pour votre participation et votre engagement dans le développement de votre intelligence émotionnelle.</p>
                     <p>N'hésitez pas à revenir vers ces ressources chaque fois que vous en aurez besoin.</p>
+                    <p>Pour aller plus loin, vous pouvez consulter notre site : <a href="https://www.tmk-performances.com" target="_blank">www.tmk-performances.com</a></p>
                 </div>
             </div>
+        </div>
+
+        <div class="progress" id="progress">
+            <!-- Les étapes seront ajoutées par JavaScript -->
         </div>
 
         <div class="navigation">
@@ -227,33 +308,73 @@
         </div>
     </div>
 
+    <div class="footer">
+        <p>&copy; <span id="footer-year"></span> TMK Performances</p>
+    </div>
+
     <script>
         // Liste des modules dans l'ordre
         const modules = [
-            { id: 'module1', number: 1 },
-            { id: 'module5', number: 5 },
-            { id: 'module6', number: 6 },
-            { id: 'module14', number: 14 },
-            { id: 'module18', number: 18 },
-            { id: 'module39', number: 39 },
-            { id: 'module44', number: 44 }
+            { id: 'welcome', number: 'W', title: 'Bienvenue' },
+            { id: 'module1', number: 1, title: 'Le Digital Accompagné (DA)' },
+            { id: 'module5', number: 5, title: 'Quelle est votre météo intérieure mais plus précisément ?' },
+            { id: 'module6', number: 6, title: 'Roue des émotions' },
+            { id: 'module14', number: 14, title: 'Test de Quotient Émotionnel' },
+            { id: 'module18', number: 18, title: 'Les émotions - Alliées ou ennemies' },
+            { id: 'module39', number: 39, title: 'Situation 2' },
+            { id: 'module44', number: 44, title: 'Fin - remerciements' }
         ];
 
         let currentModuleIndex = 0;
         const prevBtn = document.getElementById('prevBtn');
         const nextBtn = document.getElementById('nextBtn');
+        const startBtn = document.getElementById('startBtn');
         const progressContainer = document.getElementById('progress');
+        const sommaireList = document.getElementById('sommaireList');
+
+        // Mettre à jour l'année dans le footer
+        document.getElementById('footer-year').textContent = new Date().getFullYear();
 
         // Initialiser la barre de progression
         function initProgressBar() {
             modules.forEach((module, index) => {
-                const step = document.createElement('div');
-                step.className = 'progress-step';
-                step.textContent = module.number;
-                if (index === 0) {
-                    step.classList.add('active');
+                if (index !== 0) { // On ne montre pas la bienvenue dans la progress bar
+                    const step = document.createElement('div');
+                    step.className = 'progress-step';
+                    step.textContent = module.number;
+                    if (index === 1) { // Le premier module réel (index 1) est actif au début
+                        step.classList.add('active');
+                    }
+                    progressContainer.appendChild(step);
                 }
-                progressContainer.appendChild(step);
+            });
+        }
+
+        // Initialiser le sommaire
+        function initSommaire() {
+            modules.forEach((module, index) => {
+                const li = document.createElement('li');
+                li.textContent = `${module.number}. ${module.title}`;
+                if (index === 0) {
+                    li.style.fontWeight = 'bold';
+                    li.style.color = '#4a6fa5';
+                }
+                li.addEventListener('click', () => {
+                    currentModuleIndex = index;
+                    showModule(currentModuleIndex);
+                    updateSommaire();
+                });
+                sommaireList.appendChild(li);
+            });
+        }
+
+        // Mettre à jour le sommaire
+        function updateSommaire() {
+            const items = sommaireList.querySelectorAll('li');
+            items.forEach((item, index) => {
+                item.style.fontWeight = 'normal';
+                item.style.color = index < currentModuleIndex ? '#4CAF50' :
+                                  index === currentModuleIndex ? '#4a6fa5' : '#333';
             });
         }
 
@@ -262,9 +383,9 @@
             const steps = document.querySelectorAll('.progress-step');
             steps.forEach((step, index) => {
                 step.classList.remove('active', 'completed');
-                if (index < currentModuleIndex) {
+                if (index < currentModuleIndex - 1) { // -1 car on ne compte pas la bienvenue
                     step.classList.add('completed');
-                } else if (index === currentModuleIndex) {
+                } else if (index === currentModuleIndex - 1) { // -1 car on ne compte pas la bienvenue
                     step.classList.add('active');
                 }
             });
@@ -283,9 +404,11 @@
             // Mettre à jour les boutons de navigation
             prevBtn.disabled = index === 0;
             nextBtn.disabled = index === modules.length - 1;
+            nextBtn.textContent = index === modules.length - 1 ? 'Terminer' : 'Suivant';
 
-            // Mettre à jour la barre de progression
+            // Mettre à jour la barre de progression et le sommaire
             updateProgressBar();
+            updateSommaire();
         }
 
         // Gestionnaire d'événements pour le bouton Suivant
@@ -304,13 +427,13 @@
             }
         });
 
-        // Initialisation
-        document.addEventListener('DOMContentLoaded', () => {
-            initProgressBar();
+        // Gestionnaire d'événements pour le bouton Commencer
+        startBtn.addEventListener('click', () => {
+            currentModuleIndex = 1;
             showModule(currentModuleIndex);
         });
 
-        // Permettre la navigation avec les touches du clavier
+        // Gestionnaire d'événements pour les touches du clavier
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowRight') {
                 if (currentModuleIndex < modules.length - 1) {
@@ -324,6 +447,14 @@
                 }
             }
         });
+
+        // Initialisation
+        document.addEventListener('DOMContentLoaded', () => {
+            initProgressBar();
+            initSommaire();
+            showModule(currentModuleIndex);
+        });
     </script>
 </body>
 </html>
+
