@@ -1,47 +1,92 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Test Supabase</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        button { padding: 10px 15px; background: #4a6fa5; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background: #3a5a8f; }
+        #resultat { margin-top: 20px; padding: 10px; border-radius: 5px; }
+        .success { background: #d4edda; color: #155724; }
+        .error { background: #f8d7da; color: #721c24; }
+    </style>
 </head>
 <body>
     <h1>Test de connexion à Supabase</h1>
     <button id="testSupabase">Tester Supabase</button>
     <div id="resultat"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <!-- Chargement du script Supabase -->
     <script>
-        document.getElementById('testSupabase').addEventListener('click', async () => {
+        // Fonction pour charger dynamiquement Supabase
+        function loadSupabase() {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+                script.onload = () => resolve(window.supabase);
+                script.onerror = () => reject(new Error("Échec du chargement de Supabase"));
+                document.head.appendChild(script);
+            });
+        }
+
+        // Attendre que le DOM soit chargé
+        document.addEventListener('DOMContentLoaded', async () => {
             const resultatDiv = document.getElementById('resultat');
-            resultatDiv.innerHTML = "Test en cours...";
+            const testButton = document.getElementById('testSupabase');
 
-            try {
-                const supabase = supabase.createClient(
-                    'https://kycoxionbkjzkqbixeiw.supabase.co',
-                    'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
-                );
+            testButton.addEventListener('click', async () => {
+                resultatDiv.className = '';
+                resultatDiv.textContent = "Chargement de Supabase...";
 
-                // Tester une requête simple
-                const { data, error } = await supabase
-                    .from('reponses')
-                    .select('*')
-                    .limit(1);
+                try {
+                    // Charger Supabase dynamiquement
+                    await loadSupabase();
 
-                if (error) throw error;
+                    // Initialiser Supabase
+                    const supabase = supabase.createClient(
+                        'https://kycoxionbkjzkqbixeiw.supabase.co',
+                        'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
+                    );
 
-                resultatDiv.innerHTML = `
-                    <p style="color: green;">✅ Supabase fonctionne !</p>
-                    <p>Nombre de réponses : ${data.length}</p>
-                `;
-            } catch (error) {
-                resultatDiv.innerHTML = `
-                    <p style="color: red;">❌ Erreur : ${error.message}</p>
-                `;
-                console.error("Erreur complète :", error);
-            }
+                    // Tester une requête simple
+                    constatDiv = document.getElementById('resultat');
+                    constatDiv.innerHTML = "Connexion à Supabase... (cette étape peut prendre quelques secondes)";
+
+                    const { data, error } = await supabase
+                        .from('reponses')
+                        .select('*')
+                        .limit(1);
+
+                    if (error) throw error;
+
+                    resultatDiv.className = 'success';
+                    resultatDiv.innerHTML = `
+                        <p>✅ Supabase fonctionne correctement !</p>
+                        <p>Nombre de réponses dans la table : ${data.length}</p>
+                        <p>Première réponse : ${data.length > 0 ? data[0].texte : 'Aucune réponse'}</p>
+                    `;
+                } catch (error) {
+                    console.error("Erreur complète :", error);
+                    resultatDiv.className = 'error';
+                    resultatDiv.innerHTML = `
+                        <p>❌ Erreur : ${error.message}</p>
+                        <p>Vérifiez :</p>
+                        <ul>
+                            <li>La connexion Internet</li>
+                            <li>L'URL et la clé Supabase</li>
+                            <li>Que la table 'reponses' existe</li>
+                            <li>Que RLS est désactivé (en phase de test)</li>
+                        </ul>
+                    `;
+                }
+            });
         });
     </script>
 </body>
 </html>
+
 
 
 
