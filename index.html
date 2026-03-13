@@ -80,62 +80,66 @@
         </div>
     </div>
 
-    <!-- Supabase Client -->
+    <!-- Chargement du client Supabase UNE SEULE FOIS -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // 1. Initialiser Supabase avec votre URL et clé anonyme
-        const supabaseUrl = 'https://kycoxionbkjzkqbixeiw.supabase.co';  // Remplacez par votre URL
-        const supabaseKey = 'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ';               // Remplacez par votre clé anonyme
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-        // 2. Générer un user_id unique pour le stagiaire (stocké en localStorage)
-        let userId = localStorage.getItem('userId');
-        if (!userId) {
-            userId = crypto.randomUUID(); // Génère un UUID comme "a1b2c3d4-5678-9101-1121-314151617181"
-            localStorage.setItem('userId', userId);
-            console.log("Nouvel utilisateur généré :", userId);
-        }
-
-        // 3. Sauvegarder la réponse dans Supabase
-        document.getElementById('validerReponse6').addEventListener('click', async () => {
-            const reponse = document.getElementById('reponseModule6').value.trim();
-            if (!reponse) {
-                alert("Veuillez écrire une réponse.");
-                return;
+        // Attendre que le DOM soit chargé et que Supabase soit disponible
+        document.addEventListener('DOMContentLoaded', function() {
+            // 1. Initialiser Supabase UNE SEULE FOIS
+            if (typeof supabase === 'undefined') {  // Vérifier que Supabase n'est pas déjà défini
+                const supabaseUrl = 'https://kycoxionbkjzkqbixeiw.supabase.co';
+                const supabaseKey = 'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ';
+                window.supabase = supabase.createClient(supabaseUrl, supabaseKey);
             }
 
-            // Afficher un message de chargement
-            document.getElementById('retourModule6').innerHTML = `
-                <p>Enregistrement en cours...</p>
-            `;
-            document.getElementById('retourModule6').style.display = 'block';
+            // 2. Générer un user_id unique pour le stagiaire
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = crypto.randomUUID();
+                localStorage.setItem('userId', userId);
+                console.log("Nouvel utilisateur généré :", userId);
+            }
 
-            try {
-                // Enregistrer dans Supabase
-                const { error } = await supabase.from('reponses').insert({
-                    user_id: userId,
-                    module_id: 6,  // Module 6 : Roue des émotions
-                    texte: reponse
-                });
-
-                if (error) {
-                    throw error;
+            // 3. Sauvegarder la réponse dans Supabase
+            document.getElementById('validerReponse6').addEventListener('click', async () => {
+                const reponse = document.getElementById('reponseModule6').value.trim();
+                if (!reponse) {
+                    alert("Veuillez écrire une réponse.");
+                    return;
                 }
 
-                // Succès : afficher un message de confirmation
-                document.getElementById('retourModule6').innerHTML = `
-                    <p style="color: green;">✅ Votre réponse a été enregistrée avec succès !</p>
-                `;
-            } catch (error) {
-                console.error("Erreur Supabase:", error);
-                document.getElementById('retourModule6').innerHTML = `
-                    <p style="color: red;">❌ Erreur lors de l'enregistrement. Veuillez réessayer.</p>
-                    <p>Détails : ${error.message}</p>
-                `;
-            }
+                // Afficher un message de chargement
+                document.getElementById('retourModule6').innerHTML = `<p>Enregistrement en cours...</p>`;
+                document.getElementById('retourModule6').style.display = 'block';
+
+                try {
+                    // Enregistrer dans Supabase
+                    const { error } = await window.supabase.from('reponses').insert({
+                        user_id: userId,
+                        module_id: 6,  // Module 6 : Roue des émotions
+                        texte: reponse
+                    });
+
+                    if (error) {
+                        throw error;
+                    }
+
+                    // Succès : afficher un message de confirmation
+                    document.getElementById('retourModule6').innerHTML = `
+                        <p style="color: green;">✅ Votre réponse a été enregistrée avec succès !</p>
+                    `;
+                } catch (error) {
+                    console.error("Erreur Supabase:", error);
+                    document.getElementById('retourModule6').innerHTML = `
+                        <p style="color: red;">❌ Erreur lors de l'enregistrement. Veuillez réessayer.</p>
+                        <p>Détails : ${error.message}</p>
+                    `;
+                }
+            });
         });
     </script>
 </body>
 </html>
+
 
 
