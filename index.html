@@ -1,138 +1,112 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 6 - Roue des émotions</title>
-    <style>
-        body { font-family: Arial, sans-serif; background-color: #f5f7fa; margin: 0; padding: 20px; color: #333; }
-        .container { max-width: 800px; margin: 0 auto; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); }
-        .module-title { display: flex; align-items: center; margin-bottom: 20px; }
-        .module-number { background-color: #4a6fa5; color: white; width: 30px; height: 30px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 10px; font-weight: bold; }
-        textarea { width: 100%; min-height: 100px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; margin-bottom: 10px; }
-        button { background-color: #4a6fa5; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        button:hover { background-color: #3a5a8f; }
-        .retour { margin-top: 20px; padding: 15px; background-color: #f8f9fa; border-radius: 5px; display: none; }
-        .error { color: red; }
-        .success { color: green; }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="module-title">
-            <div class="module-number">6</div>
-            <h1>Roue des émotions</h1>
-        </div>
-        <div class="content">
-            <p>À l'aide de la roue des émotions, identifiez une émotion que vous avez récemment ressentie...</p>
-            <textarea id="reponseModule6" placeholder="Votre réponse ici..."></textarea>
-            <button id="validerReponse6">Valider</button>
-            <div id="retourModule6" class="retour"></div>
-        </div>
-    </div>
+<script>
+    // Variable globale pour Supabase
+    let supabaseClient = null;
 
-    <script>
-        // Variable globale pour stocker l'instance Supabase
-        let supabaseClient = null;
+    // Initialiser Supabase
+    async function initSupabase() {
+        return new Promise((resolve, reject) => {
+            if (window.supabase) {
+                supabaseClient = window.supabase.createClient(
+                    'https://kycoxionbkjzkqbixeiw.supabase.co',
+                    'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
+                );
+                resolve();
+                return;
+            }
 
-        // Fonction pour initialiser Supabase
-        async function initSupabase() {
-            return new Promise((resolve, reject) => {
-                // Vérifier si Supabase est déjà chargé
-                if (window.supabase) {
-                    supabaseClient = window.supabase.createClient(
-                        'https://kycoxionbkjzkqbixeiw.supabase.co',
-                        'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
-                    );
-                    resolve();
+            const script = document.createElement('script');
+            script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
+            script.onload = () => {
+                supabaseClient = window.supabase.createClient(
+                    'https://kycoxionbkjzkqbixeiw.supabase.co',
+                    'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
+                );
+                resolve();
+            };
+            script.onerror = () => reject(new Error("Échec du chargement de Supabase"));
+            document.head.appendChild(script);
+        });
+    }
+
+    // Attendre que le DOM soit chargé
+    document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            await initSupabase();
+            console.log("Supabase initialisé avec succès");
+
+            // Générer un user_id unique
+            let userId = localStorage.getItem('userId');
+            if (!userId) {
+                userId = crypto.randomUUID();
+                localStorage.setItem('userId', userId);
+                console.log("Nouvel utilisateur :", userId);
+            }
+
+            // Sauvegarder la réponse
+            document.getElementById('validerReponse6').addEventListener('click', async () => {
+                const reponse = document.getElementById('reponseModule6').value.trim();
+                if (!reponse) {
+                    alert("Veuillez écrire une réponse.");
                     return;
                 }
 
-                // Charger le script Supabase dynamiquement
-                const script = document.createElement('script');
-                script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2';
-                script.onload = () => {
-                    supabaseClient = window.supabase.createClient(
-                        'https://kycoxionbkjzkqbixeiw.supabase.co',
-                        'sb_publishable_YSV2cvZcvpQw0qPucpuJyg_jXGJj7NZ'
-                    );
-                    resolve();
-                };
-                script.onerror = () => reject(new Error("Échec du chargement du script Supabase"));
-                document.head.appendChild(script);
-            });
-        }
+                const retourDiv = document.getElementById('retourModule6');
+                retourDiv.innerHTML = `<p>Enregistrement en cours...</p>`;
+                retourDiv.style.display = 'block';
 
-        // Attendre que le DOM soit chargé
-        document.addEventListener('DOMContentLoaded', async () => {
-            try {
-                // Initialiser Supabase
-                await initSupabase();
-                console.log("Supabase initialisé avec succès");
+                try {
+                    if (!supabaseClient) throw new Error("Supabase non initialisé");
 
-                // Générer un user_id unique
-                let userId = localStorage.getItem('userId');
-                if (!userId) {
-                    userId = crypto.randomUUID();
-                    localStorage.setItem('userId', userId);
-                    console.log("Nouvel utilisateur :", userId);
-                }
+                    const { data, error } = await supabaseClient
+                        .from('reponses')
+                        .insert({ user_id: userId, module_id: 6, texte: reponse });
 
-                // Sauvegarder la réponse
-                document.getElementById('validerReponse6').addEventListener('click', async () => {
-                    const reponse = document.getElementById('reponseModule6').value.trim();
-                    if (!reponse) {
-                        alert("Veuillez écrire une réponse.");
+                    if (error) {
+                        if (error.code === "42501") {
+                            // Erreur RLS spécifique
+                            retourDiv.className = 'retour error';
+                            retourDiv.innerHTML = `
+                                <p>❌ Erreur de sécurité (RLS) :</p>
+                                <p>Les insertions sont bloquées par les politiques de sécurité de Supabase.</p>
+                                <p>Pour résoudre ce problème :</p>
+                                <ol>
+                                    <li>Allez dans Supabase → Authentication → Policies.</li>
+                                    <li>Sélectionnez la table "reponses".</li>
+                                    <li>Désactivez RLS ou créez une politique pour autoriser les insertions.</li>
+                                </ol>
+                            `;
+                        } else {
+                            throw error;
+                        }
                         return;
                     }
 
-                    const retourDiv = document.getElementById('retourModule6');
-                    retourDiv.innerHTML = `<p>Enregistrement en cours...</p>`;
-                    retourDiv.style.display = 'block';
-
-                    try {
-                        if (!supabaseClient) {
-                            throw new Error("Supabase n'est pas initialisé");
-                        }
-
-                        const { error } = await supabaseClient.from('reponses').insert({
-                            user_id: userId,
-                            module_id: 6,
-                            texte: reponse
-                        });
-
-                        if (error) throw error;
-
-                        retourDiv.className = 'retour success';
-                        retourDiv.innerHTML = `<p>✅ Votre réponse a été enregistrée avec succès !</p>`;
-                    } catch (error) {
-                        console.error("Erreur complète :", error);
-                        retourDiv.className = 'retour error';
-                        retourDiv.innerHTML = `
-                            <p>❌ Erreur : ${error.message}</p>
-                            <p>Vérifiez :</p>
-                            <ul>
-                                <li>La connexion Internet</li>
-                                <li>L'URL et la clé Supabase</li>
-                                <li>Que la table 'reponses' existe</li>
-                                <li>Que RLS est désactivé</li>
-                            </ul>
-                        `;
-                    }
-                });
-            } catch (error) {
-                console.error("Erreur d'initialisation :", error);
-                document.getElementById('retourModule6').innerHTML = `
-                    <p class="error">❌ Erreur d'initialisation de Supabase : ${error.message}</p>
-                `;
-                document.getElementById('retourModule6').style.display = 'block';
-            }
-        });
-    </script>
-</body>
-</html>
-
-
+                    retourDiv.className = 'retour success';
+                    retourDiv.innerHTML = `<p>✅ Réponse enregistrée avec succès !</p>`;
+                } catch (error) {
+                    console.error("Erreur complète :", error);
+                    retourDiv.className = 'retour error';
+                    retourDiv.innerHTML = `
+                        <p>❌ Erreur : ${error.message}</p>
+                        <p>Vérifiez :</p>
+                        <ul>
+                            <li>La connexion Internet</li>
+                            <li>L'URL et la clé Supabase</li>
+                            <li>Que la table 'reponses' existe</li>
+                            <li>Que RLS est désactivé ou correctement configuré</li>
+                        </ul>
+                    `;
+                }
+            });
+        } catch (error) {
+            console.error("Erreur d'initialisation :", error);
+            document.getElementById('retourModule6').innerHTML = `
+                <p class="error">❌ Erreur d'initialisation : ${error.message}</p>
+            `;
+            document.getElementById('retourModule6').style.display = 'block';
+        }
+    });
+</script>
 
 
 
